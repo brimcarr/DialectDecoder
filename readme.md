@@ -1,6 +1,7 @@
 Hello! Thank you for your interest in the labeling birds game. Here is an overview of how it all fits together. 
 
 **What you need:** 
+
 A selection of songs that you want to analyze, organized into folders based on labels. For example, in a folder titled cut_songs, there will be subfolders like ABLA_2020, ABLA_2021, COMW_2020, COMW_2021, etc. where each subfolder contains a variety of songs (.wav files) in that class. 
 
 **What each script does:** 
