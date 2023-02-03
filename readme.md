@@ -1,6 +1,7 @@
 Hello! Thank you for your interest in the labeling birds game. Here is an overview of how it all fits together. 
 
-**What you need:** A selection of songs that you want to analyze. See the cut_songs folder for an example of how the songs are organized and sorted.
+**What you need:** 
+A selection of songs that you want to analyze, organized into folders based on labels. For example, in a folder titled cut_songs, there will be subfolders like ABLA_2020, ABLA_2021, COMW_2020, COMW_2021, etc. where each subfolder contains a variety of songs (.wav files) in that class. 
 
 **What each script does:** 
 
@@ -26,7 +27,7 @@ functions.py — An assortment of functions used across the different python fil
 	•	make_iso_specs
 	•	reset_test_set
 
-generate_spec.py  — The script used to generate the spectrograms from the audio data.
+generate_spec.py  — The script used to generate the spectrograms from the audio data (.wav files).
 
 label_game.py — The script that runs the labeling game. Run this in terminal to start the game.
 
@@ -41,12 +42,14 @@ reset_test_specs.py — The file that puts all of the test spectrograms back so 
 0. Decide how many classes you want to train on, how many and the type of anomalous classes you want to add in, etc. 
 
 The following steps you should only have to do once
-1. Have your songs in folders, similar to what is shown in the cut_songs folder. 
+
+1. Have your songs in folders, similar to what is described above. 
 2. Generate the metadata needed using make_metadata.py. This will be used for song classification by assigning labels to each dialect/song.
 3. Generate spectrograms and sort them into the appropriate classes with generate_spec.py.
-4. Then, crop out all of the white space with cropper.py
+4. Then, crop out all of the white space surrounding the spectrograms with cropper.py
 
-These you’ll do more than once depending on what you’re using the labeling birds game for.
+These steps you’ll do more than once depending on what you’re using the labeling birds game for.
+
 5. Pull out x images from each class to make a test dataset with make_test_set.py (can undo with reset_test_specs.py)
 6. Make the original CNN with make_CNN.py
 7. Test the accuracy of the CNN by running cnn_accuracy_test.py on your CNN.
