@@ -1,12 +1,12 @@
 Hello! Thank you for your interest in the labeling birds game. Here is an overview of how it all fits together. 
 
-What you need: A selection of songs that you want to analyze. See the cut_songs folder for an example of how the songs are organized and sorted.
+**What you need:** A selection of songs that you want to analyze. See the cut_songs folder for an example of how the songs are organized and sorted.
 
-What each script does: 
+**What each script does:** 
 
 make_metadata.py — Makes a .csv file with the appropriate metadata needed for the CNN and the label game. 
 
-Spect_Approach:
+**Spect_Approach:**
 
 button.py — Makes the button and dropdown classes for the game.
 
@@ -36,7 +36,7 @@ make_test_set.py — The file that pulls out random spectrograms from each class
 
 reset_test_specs.py — The file that puts all of the test spectrograms back so you can change the test size and do another random trial.
 
-How to use the software: (Note, make sure all of your directories/names are correct before running each script)
+**How to use the software:** (Note, make sure all of your directories/names are correct before running each script)
 
 0. Decide how many classes you want to train on, how many and the type of anomalous classes you want to add in, etc. 
 
