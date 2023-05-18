@@ -1,4 +1,4 @@
-Hello! Thank you for your interest in the labeling birds game. Here is an overview of how it all fits together. 
+Hello! Thank you for your interest in DialectDecoder. Here is an overview of how it all fits together. 
 
 **What you need:** 
 
