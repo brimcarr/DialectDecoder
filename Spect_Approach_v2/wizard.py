@@ -54,7 +54,7 @@ num_songs = len(metadata_array)
 for row_index, x in enumerate(metadata_array[:-1501]):
     bird_class = str(int(x[2]))
 ### Classify file based on spectrogram.
-    spect_journey = x[0].replace('cut_songs','Patrick_Spect_Approach/data/cropped_spect_data')
+    spect_journey = x[0].replace('cut_songs','Spect_Approach_v2/data/cropped_spect_data')
     spect_name = str(x[1][:-3])+'png'
     file_name = spect_journey +'/' + spect_name
     act_map, bird_label_spect_dec = apply_cam(model, file_name)
@@ -126,7 +126,7 @@ mode = 0o666
 #%% Game functions
 ### Function to load an anomalous bird song spectrogram to the game
 def anomaly_bird(anomaly_matrix, i):
-    spect_journey = (anomaly_matrix[i])[0].replace('cut_songs','Patrick_Spect_Approach/data/cropped_spect_data')
+    spect_journey = (anomaly_matrix[i])[0].replace('cut_songs','Spect_Approach_v2/data/cropped_spect_data')
     spect_name = str((anomaly_matrix[i])[1][:-3])+'png'
     file_name = spect_journey +'/' + spect_name
     cam_spec, bird_label = apply_cam(model, file_name, use_cam = True)
