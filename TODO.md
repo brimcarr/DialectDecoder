@@ -32,6 +32,7 @@ Option merge (move all *.py into one directory)
 
 Option separate (split out utilities?)
 - Keep going back and forth on this, does gen_spec / cropper belong with make_metadata or train_val_test_split?
+- Given how gen_spec / cropper essentially imports the wav files to the project directory, probably belongs with train_val_test_split
 
 
 ## also under consideration
