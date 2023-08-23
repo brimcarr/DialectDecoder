@@ -17,14 +17,14 @@ What each script in DialectDecoder does:
 
 0_prep_data.py — Runs all files in the prep folder that you need to create your spectrograms to train and use DialectDecoder on
 
-	•	prep:
-	⁃	gen_specs.py  — The script used to generate the spectrograms from the audio data.
+	prep:
+	⁃	gen_specs.py  — Generate the spectrograms from the audio data.
 	⁃	make_metadata.py — Makes a .csv file with the appropriate metadata needed for the CNN and the label game.
 	⁃	cropper.py — Takes in the spectrograms made by gen_specs.py, crops them down to the appropriate size, and saves them to a new folder (note, the new folder has to exist). You might have to grant python permission to do this, I solved this using “chmod 775 cropper.py”. 
 
 1_train_networks.py — Runs all the programs in the train folder to train the CNN and k-NN for use in DialectDecoder.
 
-	•	train
+	train
 	⁃	split_data.py — Splits data into whatever folders you want. Used to split into open/isolated sets and train/validate/test sets.
 	⁃	CNN_classifier.py — The file that makes and trains CNN’s.
 	⁃	knn_classifier.py — The file that makes and trains k-NNs.
@@ -48,7 +48,7 @@ How to use the software: (Note, make sure all of your directories/names are corr
 
 0. Decide how many classes you want to train on, how many and the type of anomalous classes you want to add in, etc. 
 
-The following you should only have to do once
+The following you should only have to do once.
 	1.	Have your songs in folders, similar to what is shown in the cut_songs folder. 
 	2.	Generate your metadata and generate/crop the spectrograms for the DialectDecoder by running 0_prep_data.py.
 
