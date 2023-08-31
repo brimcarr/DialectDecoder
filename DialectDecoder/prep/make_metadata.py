@@ -1,6 +1,6 @@
 import os
 import csv
-from get_location import get_location
+from train.get_location import get_loc as get_location
 import pandas as pd
 
 #%% Directories
