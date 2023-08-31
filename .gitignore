@@ -1,0 +1,5 @@
+.spyproject
+*.pyc
+*.png
+*.wav
+diary_install_log.txt
