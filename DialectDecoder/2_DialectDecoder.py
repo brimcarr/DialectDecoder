@@ -24,7 +24,7 @@ rd = 1 # use 1 with the first run of DialectDecoder and increase by 1 after that
 
 #%% Establish appropriate directories and load metadata.
 current_direc = os.getcwd()
-spect_direc = current_direc + '/data/cropped_spect_data/'
+spect_direc = current_direc + '/data/cropped_spect_testt/'
 audio_data_direc = current_direc + '/data/cut_songs/'
 ### CNN name
 state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name +'.pth'
