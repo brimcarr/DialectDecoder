@@ -4,3 +4,5 @@
 *.wav
 diary_install_log.txt
 *.csv
+*.pth
+DialectDecoder/kNN_networks/knn_*

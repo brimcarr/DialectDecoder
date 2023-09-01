@@ -12,7 +12,7 @@ from train import knn_classifier as knn
 
 ### Name of your experiment
 experiment_name = 'experiment_test'
-exp_round = '1'
+exp_round = '2'
 ### Experiment split (should add to 1)
 op_iso_split = [0.8, 0.2]
 ### Train/Validation/Test split for CNN (should add to 1)
@@ -28,7 +28,7 @@ spect_direc = exp_direc + '/isolated/'
 
 ### CNN directories
 old_state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name +'.pth'
-new_state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name + '/' + exp_round +'.pth'
+new_state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name + '_r' + exp_round +'.pth'
 anom_direc = exp_direc + '/isolated_labeled/'
 anom_tvt_direc = exp_direc + '/isolated_labeled_tvt_split/'
 
@@ -67,7 +67,7 @@ loaded_model.eval()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ### Retrain the CNN
-update_cnn.retrain_cnn(loaded_model, device, epochs, exp_direc, new_state_dict_path)
+update_cnn.retrain_cnn(loaded_model, device, epochs, exp_direc, new_state_dict_path, current_direc)
 
 
 #%% Train k-nn model
