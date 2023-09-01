@@ -23,7 +23,7 @@ train_val_test_split = [0.7, 0.2, 0.1]
 current_direc = os.getcwd()
 ### For sd
 # Where the cropped spectrograms live
-spect_direc = current_direc + '/data/cropped_spect_data'
+spect_direc = current_direc + '/data/cropped_spect_testt'
 # Name of folder where you want to store the experiment's data
 exp_direc = current_direc + '/data/' + experiment_name
 # Name of the folder where you want to draw the CNN tvt data from

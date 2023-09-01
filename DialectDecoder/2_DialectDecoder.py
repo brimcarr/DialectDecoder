@@ -19,12 +19,18 @@ import datetime
 ### Name of your experiment
 experiment_name = 'experiment_test'
 ### Round of DialectDecoder for that experiment
-rd = 1 # use 1 with the first run of DialectDecoder and increase by 1 after that
+rd = 2 # use 1 with the first run of DialectDecoder and increase by 1 after that
 
+
+#helper functions needed
+def find_file(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
 
 #%% Establish appropriate directories and load metadata.
 current_direc = os.getcwd()
-spect_direc = current_direc + '/data/cropped_spect_data/'
+spect_direc = current_direc + '/data/cropped_spect_testt/'
 audio_data_direc = current_direc + '/data/cut_songs/'
 ### CNN name
 state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name +'.pth'
@@ -33,6 +39,7 @@ knn = 'knn_' + experiment_name + '_rd' + str(rd-1)
 knn_name = current_direc + '/kNN_networks/' + knn
 ### Metadata file name 
 metadata = pd.read_csv(current_direc + '/metadata/' + experiment_name + '/isolated_metadata.csv')
+iso_direc = current_direc + '/data/' + experiment_name +'/isolated/' # used to back transform path names
 ### Shuffles the array so that the classes get mixed up to better classify a wide range of songs.
 metadata = metadata.sample(frac=1)
 metadata_array = metadata.to_numpy()
@@ -298,7 +305,7 @@ while is_running:
         draw_text(str(str(n+1) + '/' + str(np.shape(anomaly_array)[0]) + " anomalies"), font, white, 560, 175)
         ### Load and display spectrogram
         if show_cam == False:
-            spectrogram = pygame.image.load(spect_direc + str((anomaly_array[n])[0][-9:])+ '/' + str((anomaly_array[n])[1][:-3]) + 'png')
+            spectrogram = pygame.image.load(spect_direc + str((anomaly_array[n])[0][len(iso_direc):])+ '/' + str((anomaly_array[n])[1][:-3]) + 'png')
         else:
             spectrogram = pygame.image.load(current_direc + '/temp_cam.png')
         window_surface.blit(spectrogram, (50, 100))
@@ -363,7 +370,10 @@ while is_running:
                     
 #%% Play song button
                 elif play_song_button.isOver(pos):
-                    song_name = audio_data_direc + str(((anomaly_array[n])[0])[-9:] +'/' + str((anomaly_array[n])[1])[:-3]) + 'wav'
+                    song_name = audio_data_direc + str(((anomaly_array[n])[0])[len(iso_direc):] +'/' + str((anomaly_array[n])[1])[:-3]) + 'wav'
+                    if not os.path.exists(song_name):
+                        # search for file as quick method does not work
+                        song_name = find_file(str((anomaly_array[n])[1])[:-3] + 'wav',audio_data_direc)
                     song_time = pygame.mixer.Sound(song_name)
                     pygame.mixer.Sound.play(song_time)
                     

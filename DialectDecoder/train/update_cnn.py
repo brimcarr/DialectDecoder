@@ -41,7 +41,7 @@ plt.ion()   # interactive mode
 #%% Function to make anomaly directory
 def make_anom_direc(anom_data, spect_direc, anom_direc):
     for row_index, x in anom_data.iterrows():
-        bird_class = (x[0])[-9:]
+        bird_class = os.path.basename(x[0])
         og_spec_file = spect_direc + bird_class + '/' + (x[1])[:-3] +'png'
         new_spec_file = anom_direc + bird_class + '/' + (x[1])[:-3] +'png'
         if os.path.exists(anom_direc + '/' + bird_class + '/'):
@@ -93,7 +93,7 @@ def combine_data(anom_tvt_dir, exp_direc):
 # combine_data(anom_tvt_direc) 
 
 #%% Freeze the layers
-def retrain_cnn(loaded_model, device, epochs, exp_direc, new_state_dict_path):
+def retrain_cnn(loaded_model, device, epochs, exp_direc, new_state_dict_path, current_direc):
     for param in loaded_model.parameters():
         param.requires_grad = False # freezes the layers
         
@@ -106,7 +106,7 @@ def retrain_cnn(loaded_model, device, epochs, exp_direc, new_state_dict_path):
     val_dir = exp_direc + '/val'
     
     print(datetime.datetime.now())
-    new_model = CNN_classifier.fully_train_model(train_dir, val_dir, 25, new_state_dict_path, loaded_model)
+    new_model = CNN_classifier.fully_train_model(train_dir, val_dir, 25, new_state_dict_path, loaded_model, current_direc)
     print(datetime.datetime.now())
     return new_model
 

@@ -63,6 +63,7 @@ def create_dataloaders(data_dir, percent_train):
 #%% Creates a single dataloader given a path to a single directory containing spectrograms
 # (directory is assumed to contain folders like 'ABLA_2020' ect.)
 def create_dataloader(data_dir):
+    print(data_dir)
     data_label_pairs = []
     for root, _, files in tqdm(os.walk(data_dir)):
         for idx, spec_file in enumerate(files):
@@ -74,6 +75,9 @@ def create_dataloader(data_dir):
             else:
                 pass
     dataset = BirdData(data_label_pairs)
+    print(len(dataset))
+    m_len = min(4,len(dataset))
+    print(data_label_pairs[0:m_len])
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
     return dataloader
@@ -226,7 +230,8 @@ def fully_train_model(train_dir, val_dir, num_epochs, state_dict_path, model, cu
             torch.save(model.state_dict(), state_dict_path)
 
     fig_path = current_direc + '/output_files/exp0/loss_acc_fig_exp_0.png'
-    plot_loss_and_acc(train_losses, train_accs, val_losses, val_accs, model_name='ResNet18_exp0', save_path=fig_path)
+    os.makedirs(os.path.dirname(fig_path),exist_ok=True)
+    plot_loss_and_acc(train_losses, train_accs, val_losses, val_accs, current_direc=current_direc, model_name='ResNet18_exp0', save_path=fig_path)
 
     return train_losses, train_accs, val_losses, val_accs
 
