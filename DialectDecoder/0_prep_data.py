@@ -9,7 +9,7 @@ audio_data_direc = current_direc + '/data/cut_songs/'
 ### Directory you're putting the spectrograms into and later cropping from
 spect_direc = current_direc + '/data/testt_spect'
 ### Place you get the metadata for each file from
-metadata = pd.read_csv(current_direc + '/metadata/wizard_metadata.csv')
+metadata = pd.read_csv(current_direc + '/metadata/2022_metadata.csv')
 ### Place you save your new metafile to
 csv_path = current_direc + '/metadata/testtt.csv'
 ### Directory where you store the cropped spectrograms
