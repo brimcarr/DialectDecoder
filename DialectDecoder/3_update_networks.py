@@ -34,7 +34,7 @@ anom_tvt_direc = exp_direc + '/isolated_labeled_tvt_split/'
 
 ### k-NN directories
 save_direc = current_direc + '/kNN_networks/'
-metadata = pd.read_csv(current_direc + '/metadata/wizard_metadata.csv')
+metadata = pd.read_csv(current_direc + '/metadata/2022_metadata.csv')
 train_direc = current_direc + '/data/' + experiment_name + '/train'
 csv_path = (current_direc + '/metadata/' + experiment_name + '/knn_open_metadata_' 
                 + experiment_name + '_rd' + exp_round + '.csv')
