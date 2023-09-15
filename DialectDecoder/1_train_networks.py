@@ -37,7 +37,7 @@ test_direc = current_direc + '/data/' + experiment_name + '/test'
 
 ### For knn
 save_direc = current_direc + '/kNN_networks/'
-metadata = pd.read_csv(current_direc + '/metadata/wizard_metadata.csv')
+metadata = pd.read_csv(current_direc + '/metadata/2022_metadata.csv')
 csv_path = current_direc + '/metadata/' + experiment_name + '/knn_open_metadata_' + experiment_name + '.csv'
 # Network name
 knn_name = 'knn_' + experiment_name + '_rd' + str(rd)
