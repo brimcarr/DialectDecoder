@@ -219,7 +219,9 @@ existing_confirm_button = button.Button(350, 835, 180, 50, ltgrey, 'Confirm Clas
 next_song_button = button.Button(150, 835, 180, 50, ltgrey, 'Next Song')
 
 # Class activation button
-activation_button = button.Button(540, 325, 250, 50, ltgrey, 'Show Activation Map')
+switch_act_mode = button.Button(540, 325, 250, 50, ltgrey, 'Show Activation Map')
+switch_spe_mode = button.Button(540, 325, 250, 50, ltgrey, 'Show Spectrogram')
+activation_button = switch_act_mode
 
 # Start game button
 start_button = button.Button(300, 400, 200, 50, ltgrey, 'Start Game')
@@ -348,8 +350,10 @@ while is_running:
         ### Load and display spectrogram
         if show_cam == False:
             spectrogram = pygame.image.load(spect_direc + str((anomaly_array[n])[0][len(iso_direc):])+ '/' + str((anomaly_array[n])[1][:-3]) + 'png')
+            activation_button = switch_act_mode
         else:
             spectrogram = pygame.image.load(current_direc + '/temp_cam.png')
+            activation_button = switch_spe_mode
         window_surface.blit(spectrogram, (50, 100))
         ### Load and display guesses
         spect_bird_guess = (anomaly_array[n])[5]
@@ -357,8 +361,8 @@ while is_running:
         text_spect_class = font.render(bird_classes[int(spect_bird_guess)],1,ltgrey)
         text_loc_class = font.render(bird_classes[int(loc_bird_guess)],1,ltgrey)
         ### Draw buttons
-        spect_button.draw(window_surface)
-        loc_button.draw(window_surface)
+        # spect_button.draw(window_surface)
+        # loc_button.draw(window_surface)
         existing_song_button.draw(window_surface)
         new_song_button.draw(window_surface)
         play_song_button.draw(window_surface)
