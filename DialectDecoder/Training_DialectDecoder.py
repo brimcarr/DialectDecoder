@@ -216,6 +216,7 @@ play_song_button = button.Button(560, 250, 200, 50, ltgrey, 'Play Song')
 # Verification buttons
 add_to_birds_button = button.Button(550, 835, 180, 50, ltgrey, 'Classify Song')
 existing_confirm_button = button.Button(350, 835, 180, 50, ltgrey, 'Confirm Class')
+next_song_button = button.Button(150, 835, 180, 50, ltgrey, 'Next Song')
 
 # Class activation button
 activation_button = button.Button(540, 325, 250, 50, ltgrey, 'Show Activation Map')
@@ -267,9 +268,12 @@ new_song = False
 label_active = False
 type_active = False
 existing_pressed = False
+confirm_pressed = False
 
 # CAM states
 show_cam = False
+
+header2 = ['flock_path', 'file_name', 'bird_label', 'latitude', 'longitude', 'cnn_label', 'knn_label', 'human_label', 'date/time', 'labeler']
 
 
 #%% Game Loop
@@ -319,7 +323,7 @@ while is_running:
 #%% End screen of game
     elif finished == True:
         window_surface.blit(background,(0,0))
-        draw_text("You have classified all anomalies!", font, white, 50, 50)
+        draw_text("You have classified all Samples!", font, white, 50, 50)
         event_list = pygame.event.get()
     ### Allows you to close the game
         for event in event_list:
@@ -372,6 +376,8 @@ while is_running:
     ### Existing song screen draw
         if existing_pressed == True:
             existing_confirm_button.draw(window_surface)
+        if confirm_pressed == True:
+            next_song_button.draw(window_surface)
 #%% Events
         event_list = pygame.event.get()
         for event in event_list:
@@ -381,7 +387,7 @@ while is_running:
                 is_running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
 #%% CNN and k-NN buttons
-                if spect_button.isOver(pos) or loc_button.isOver(pos):
+                if False: # and spect_button.isOver(pos) or loc_button.isOver(pos):
                     ### Labels song with the CNN label
                     if spect_button.isOver(pos):
                         spect_time = str(datetime.datetime.now())
@@ -403,6 +409,17 @@ while is_running:
                     else:
                         n = n+1
                         show_cam = False
+                        new_text_color = color_passive
+                        new_box_color = color_passive
+
+                elif next_song_button.isOver(pos) and confirm_pressed:
+                    if n == len(anomaly_array)-1:
+                        finished = True
+                    ### Pulls up next anomalous image and resets screen
+                    else:
+                        n = n+1
+                        show_cam = False
+                        confirm_pressed = False
                         new_text_color = color_passive
                         new_box_color = color_passive
                     
@@ -459,11 +476,20 @@ while is_running:
                     new_box_color = color_passive
                     label_user_text = ''
                     type_user_text = ''
-                    if n == len(anomaly_array)-1:
-                        finished = True
-                    else:
-                        n = n+1
-                        show_cam = False
+                    confirm_pressed = True
+                ### Print out new resolved table
+                    with open(classified_csv_name, 'w', encoding='UTF8') as f:
+                        writer = csv.writer(f)
+                    ### Write the header
+                        writer.writerow(header2)
+                    #### Write the data
+                        for b in resolved_array:
+                            writer.writerow(b)
+                    # if n == len(anomaly_array)-1:
+                    #     finished = True
+                    # else:
+                    #     n = n+1
+                    #     show_cam = False
                         
 #%% Existing song button events
                 if existing_song_button.isOver(pos):
@@ -473,7 +499,7 @@ while is_running:
                     new_box_color = color_passive
                     existing_text_color = color_text_active
             ### Confirm class choice from drop down menu        
-                if existing_confirm_button.isOver(pos):
+                if existing_confirm_button.isOver(pos) and existing_pressed:
                     bcl_main = str(bird_class_list.main)
                     bci = str(bird_classes.index(bcl_main))
             ### Add data to resolved_array
@@ -482,12 +508,21 @@ while is_running:
                     existing_row = list(existing_row)
                     existing_row.extend([existing_time, name_user_text])
                     resolved_array.append(existing_row)
-            ### Move to next anomaly
-                    if n == len(anomaly_array)-1:
-                        finished = True
-                    else:
-                        n = n+1
-                        show_cam = False
+                    confirm_pressed = True
+                ### Print out new resolved table
+                    with open(classified_csv_name, 'w', encoding='UTF8') as f:
+                        writer = csv.writer(f)
+                    ### Write the header
+                        writer.writerow(header2)
+                    #### Write the data
+                        for b in resolved_array:
+                            writer.writerow(b)
+            # ### Move to next anomaly
+            #         if n == len(anomaly_array)-1:
+            #             finished = True
+            #         else:
+            #             n = n+1
+            #             show_cam = False
                     existing_pressed = False
                     bird_class_list.main = "Select Bird Class"
                     scroll_index = 0
@@ -530,8 +565,9 @@ while is_running:
             scroll_index = selected_option[1]
             if selected_option[0] >= 0:
                 bird_class_list.main = bird_class_list.options[selected_option[0]+scroll_index]
-        # window_surface.blit(text_spect_class, (225, 480))  
-        # window_surface.blit(text_loc_class, (675, 480)) 
+        if confirm_pressed:
+            window_surface.blit(text_spect_class, (225, 480))  
+            window_surface.blit(text_loc_class, (675, 480)) 
         text_loc = font.render('[' + str((anomaly_array[n])[3]) + ', ' + str((anomaly_array[n])[4]) + ']' ,1,ltgrey)
         window_surface.blit(text_loc, (425, 60)) 
           

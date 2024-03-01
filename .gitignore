@@ -6,3 +6,4 @@ diary_install_log.txt
 *.csv
 *.pth
 DialectDecoder/kNN_networks/knn_*
+.DS_Store
