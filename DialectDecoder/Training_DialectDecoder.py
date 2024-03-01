@@ -13,6 +13,25 @@ import torch
 from torchvision.models import resnet18
 import torch.nn as nn
 import datetime
+from itertools import filterfalse
+
+
+def unique_everseen(iterable, key=None):
+    "List unique elements, preserving order. Remember all elements ever seen."
+    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
+    # unique_everseen('ABBcCAD', str.casefold) --> A B c D
+    seen = set()
+    if key is None:
+        for element in filterfalse(seen.__contains__, iterable):
+            seen.add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen.add(k)
+                yield element
+
 
 #%% Edit the section below to make your experiment
 ### Note, make sure your experiment name here matches the one you used in train.py
@@ -38,14 +57,31 @@ state_dict_path = current_direc + '/CNN_networks/CNN_' + experiment_name +'.pth'
 knn = 'knn_' + experiment_name + '_rd' + str(rd-1)
 knn_name = current_direc + '/kNN_networks/' + knn
 ### Metadata file name 
-metadata = pd.read_csv(current_direc + '/metadata/' + experiment_name + '/isolated_metadata.csv')
-iso_direc = current_direc + '/data/' + experiment_name +'/isolated/' # used to back transform path names
+metadata = pd.read_csv(current_direc + '/metadata/' + experiment_name + '/knn_open_metadata_'+experiment_name+'.csv')
+iso_direc = current_direc + '/data/' + experiment_name +'/train/' # used to back transform path names
+# print(metadata["bird_label"])
+labels_seen = unique_everseen(metadata["bird_label"])
+tmp_metadata = None
+for l_key in labels_seen:
+    l_metadata = metadata[metadata.bird_label == l_key ].dropna()
+    if np.shape(l_metadata)[0] > 5:
+        l_metadata = l_metadata.sample(5)
+    if tmp_metadata is None:
+        tmp_metadata = l_metadata
+    else:
+        tmp_metadata = pd.concat((tmp_metadata,l_metadata))
+
 ### Shuffles the array so that the classes get mixed up to better classify a wide range of songs.
-metadata = metadata.sample(frac=1)
+if tmp_metadata is None:
+    print("ERROR, no samples found!")
+    exit(1)
+metadata = tmp_metadata.sample(frac=1)
 metadata_array = metadata.to_numpy()
+print(metadata)
+print(metadata_array)
 ### .csv file names to save to
-anomaly_csv_name = current_direc + '/output_files/' + experiment_name + '/current_anomalies_' + experiment_name + '_rd' + str(rd) + '.csv'
-classified_csv_name = current_direc + '/output_files/' + experiment_name + '/classified_anomalies_' + experiment_name + '_rd' + str(rd) + '.csv'
+anomaly_csv_name = current_direc + '/output_files/' + experiment_name + '/current_training_' + experiment_name + '_rd' + str(rd) + '.csv'
+classified_csv_name = current_direc + '/output_files/' + experiment_name + '/classified_training_' + experiment_name + '_rd' + str(rd) + '.csv'
 ### Empty arrays and bird classes
 anomaly_array = []
 resolved_array = []
@@ -81,19 +117,19 @@ for row_index, x in enumerate(metadata_array[:-1]):
         bird_label_spect = str(int(bird_label_spect_dec))
     ### Classify file based on location. 
         bird_label_loc = str(int(location_model.predict([[x[3], x[4]]])[0]))
-    ### Compare all three labels
-        if bird_label_loc==bird_label_spect==bird_class:
-            pass
-    ### If CNN and kNN match but are wrong, record as incorrect.
-        elif bird_label_loc==bird_label_spect!=bird_class:
-            labels = [bird_label_spect, bird_label_loc]
-            y = np.append(x, labels)
-            incorrect_array.append(y)
-    ### If they don't match, save as anomalous        
-        else:
-            labels = [bird_label_spect, bird_label_loc]
-            y = np.append(x, labels)
-            anomaly_array.append(y)
+    # ### Compare all three labels
+    #     if bird_label_loc==bird_label_spect==bird_class:
+    #         pass
+    # ### If CNN and kNN match but are wrong, record as incorrect.
+    #     elif bird_label_loc==bird_label_spect!=bird_class:
+    #         labels = [bird_label_spect, bird_label_loc]
+    #         y = np.append(x, labels)
+    #         incorrect_array.append(y)
+    # ### If they don't match, save as anomalous        
+    #     else:
+        labels = [bird_label_spect, bird_label_loc]
+        y = np.append(x, labels)
+        anomaly_array.append(y)
         print(row_index+1,'/',num_songs-2 ,'completed')
     
 ### Write .csv file with anomalies    
@@ -243,6 +279,7 @@ while is_running:
         ### Makes the start screen with the background, text, textbox, and buttons
         window_surface.blit(background,(0,0))
         draw_text("Welcome to DialectDecoder!", font, white, 50, 50)
+        draw_text("Training Version", font, white, 50, 100)
         draw_text("Please enter your name/identifier below.", font, white, 50, 150)
         
         name_rect = pygame.Rect(200, 300, 400, 40)
@@ -296,13 +333,14 @@ while is_running:
     ### Base screen draw
         window_surface.blit(background,(0,0))
         ### Draw constant text
-        draw_text("Anomaly Classification", font, white, 50, 25)
+        draw_text("Training Classification", font, white, 50, 25)
+        # draw_text("Training Version", font, white, 500, 25)
         draw_text("Spectrogram:", font, white, 50, 60)
         draw_text("Location:", font, white, 290, 60)
         draw_text("CNN label:", font, white, 50, 480)
         draw_text("k-NN label:", font, white, 500, 480)
         draw_text("Label Song", font, white, 315, 535)
-        draw_text(str(str(n+1) + '/' + str(np.shape(anomaly_array)[0]) + " anomalies"), font, white, 560, 175)
+        draw_text(str(str(n+1) + '/' + str(np.shape(anomaly_array)[0]) + " samples"), font, white, 560, 175)
         ### Load and display spectrogram
         if show_cam == False:
             spectrogram = pygame.image.load(spect_direc + str((anomaly_array[n])[0][len(iso_direc):])+ '/' + str((anomaly_array[n])[1][:-3]) + 'png')
@@ -492,8 +530,8 @@ while is_running:
             scroll_index = selected_option[1]
             if selected_option[0] >= 0:
                 bird_class_list.main = bird_class_list.options[selected_option[0]+scroll_index]
-        window_surface.blit(text_spect_class, (225, 480))  
-        window_surface.blit(text_loc_class, (675, 480)) 
+        # window_surface.blit(text_spect_class, (225, 480))  
+        # window_surface.blit(text_loc_class, (675, 480)) 
         text_loc = font.render('[' + str((anomaly_array[n])[3]) + ', ' + str((anomaly_array[n])[4]) + ']' ,1,ltgrey)
         window_surface.blit(text_loc, (425, 60)) 
           
